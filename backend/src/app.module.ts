@@ -24,7 +24,7 @@ import { Usuario } from './usuarios/entities/usuario.entity';
         type: 'postgres',
         url: config.get<string>('DATABASE_URL'),
         entities: [Barbero, Servicio, Cliente, Cita, Usuario],
-        synchronize: true, // solo para desarrollo; usar migraciones en producción
+        synchronize: config.get('NODE_ENV') !== 'production',
         logging: false,
       }),
       inject: [ConfigService],

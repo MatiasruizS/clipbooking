@@ -41,6 +41,20 @@ export default function StepConfirmacion({ cita, onNueva }: Props) {
         <Row label="Precio" value={`$${Number(cita.servicio.precio).toLocaleString('es-CL')}`} />
       </div>
 
+      {cita.barbero.telefono && (
+        <div className="rounded-xl bg-blue-50 border border-blue-100 px-4 py-3 text-sm text-blue-700 mb-6 text-left">
+          ¿Necesitas cancelar o reagendar? Escríbele a <strong>{cita.barbero.nombre}</strong> al{' '}
+          <a
+            href={`https://wa.me/${cita.barbero.telefono.replace(/\D/g, '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold underline underline-offset-2"
+          >
+            {cita.barbero.telefono}
+          </a>
+        </div>
+      )}
+
       <button
         onClick={onNueva}
         className="w-full rounded-xl bg-zinc-900 px-6 py-3 text-sm font-semibold text-white hover:bg-zinc-700 transition focus:outline-none"

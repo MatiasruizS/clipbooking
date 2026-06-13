@@ -42,6 +42,21 @@ async function seed() {
   `);
   console.log('✓ Usuario admin creado  →  admin@clipbooking.cl / admin123');
 
+  // Crear usuarios barbero vinculados a los barberos
+  const barberos = await ds.query(`SELECT id, nombre FROM barberos ORDER BY nombre ASC LIMIT 3`);
+  if (barberos.length > 0) {
+    const hashBarbero = await bcrypt.hash('barbero123', 10);
+    const emails = ['carlos@clipbooking.cl', 'diego@clipbooking.cl', 'matias@clipbooking.cl'];
+    for (let i = 0; i < barberos.length && i < emails.length; i++) {
+      await ds.query(`
+        INSERT INTO usuarios (id, nombre, email, password, rol, barbero_id, activo)
+        VALUES (gen_random_uuid(), '${barberos[i].nombre}', '${emails[i]}', '${hashBarbero}', 'barbero', '${barberos[i].id}', true)
+        ON CONFLICT (email) DO NOTHING;
+      `);
+    }
+    console.log('✓ Usuarios barbero creados  →  carlos@clipbooking.cl / barbero123  (y diego, matias)');
+  }
+
   await ds.destroy();
   console.log('\n✅ Seed completo. Abre http://localhost:3001');
 }
