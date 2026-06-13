@@ -20,7 +20,7 @@ async function seed() {
       (gen_random_uuid(), 'Corte + barba', 45, 12000, true),
       (gen_random_uuid(), 'Barba completa', 30, 7000, true),
       (gen_random_uuid(), 'Corte niño', 20, 5000, true)
-    ON CONFLICT DO NOTHING;
+    ON CONFLICT (nombre) DO NOTHING;
   `);
   console.log('✓ Servicios creados');
 
@@ -30,7 +30,7 @@ async function seed() {
       (gen_random_uuid(), 'Carlos Pérez', '+56912345678', true),
       (gen_random_uuid(), 'Diego Ramírez', '+56987654321', true),
       (gen_random_uuid(), 'Matías Torres', null, true)
-    ON CONFLICT DO NOTHING;
+    ON CONFLICT (nombre) DO NOTHING;
   `);
   console.log('✓ Barberos creados');
 
