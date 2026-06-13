@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import twilio from 'twilio';
 import { Resend } from 'resend';
 
@@ -31,14 +30,14 @@ export class NotificacionesService {
   private twilioClient: ReturnType<typeof twilio> | null = null;
   private resend: Resend | null = null;
 
-  constructor(private config: ConfigService) {
-    const sid = config.get<string>('TWILIO_ACCOUNT_SID');
-    const token = config.get<string>('TWILIO_AUTH_TOKEN');
+  constructor() {
+    const sid = process.env.TWILIO_ACCOUNT_SID;
+    const token = process.env.TWILIO_AUTH_TOKEN;
     if (sid && token) {
       this.twilioClient = twilio(sid, token);
     }
 
-    const resendKey = config.get<string>('RESEND_API_KEY');
+    const resendKey = process.env.RESEND_API_KEY;
     if (resendKey) {
       this.resend = new Resend(resendKey);
     }
@@ -57,7 +56,7 @@ export class NotificacionesService {
       return;
     }
 
-    const from = this.config.get<string>('TWILIO_WHATSAPP_FROM') ?? 'whatsapp:+14155238886';
+    const from = process.env.TWILIO_WHATSAPP_FROM ?? 'whatsapp:+14155238886';
     const telefono = datos.clienteTelefono.replace(/\s/g, '');
     const to = telefono.startsWith('whatsapp:') ? telefono : `whatsapp:${telefono}`;
 
@@ -86,7 +85,7 @@ export class NotificacionesService {
   private async enviarEmail(datos: DatosCita): Promise<void> {
     if (!this.resend || !datos.clienteEmail) return;
 
-    const from = this.config.get<string>('RESEND_FROM') ?? 'ClipBooking <onboarding@resend.dev>';
+    const from = process.env.RESEND_FROM ?? 'ClipBooking <onboarding@resend.dev>';
     const asunto = `✂️ Cita confirmada — ${formatearFecha(datos.fecha)} a las ${datos.horaInicio}`;
 
     const html = `
