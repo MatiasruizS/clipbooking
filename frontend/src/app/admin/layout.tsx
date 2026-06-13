@@ -5,11 +5,6 @@ import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
 
-const NAV = [
-  { href: '/admin', label: 'Agenda' },
-  { href: '/admin/caja', label: 'Caja' },
-]
-
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { usuario, loading, logout } = useAuth()
   const router = useRouter()
@@ -23,13 +18,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading || !usuario || usuario.rol === 'barbero') return null
 
+  const nav = [
+    { href: '/admin', label: 'Agenda' },
+    { href: '/admin/caja', label: 'Caja' },
+    ...(usuario.rol === 'dueno' ? [{ href: '/admin/configuracion', label: 'Configuración' }] : []),
+  ]
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <span className="font-bold text-gray-900">✂️ ClipBooking</span>
           <nav className="flex gap-1">
-            {NAV.map(n => (
+            {nav.map(n => (
               <Link
                 key={n.href}
                 href={n.href}

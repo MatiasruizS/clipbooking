@@ -61,4 +61,25 @@ export const api = {
     const params = fecha ? `?fecha=${fecha}` : ''
     return authFetch(`/caja/cuadratura${params}`)
   },
+
+  // Configuración — Barberos (requiere JWT)
+  getBarberosAdmin: () => authFetch<import('./types').Barbero[]>('/barberos'),
+  createBarbero: (data: { nombre: string; telefono?: string }) =>
+    authFetch<import('./types').Barbero>('/barberos', { method: 'POST', body: JSON.stringify(data) }),
+  updateBarbero: (id: string, data: { nombre?: string; telefono?: string; activo?: boolean }) =>
+    authFetch<import('./types').Barbero>(`/barberos/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+
+  // Configuración — Servicios (requiere JWT)
+  getServiciosAdmin: () => authFetch<import('./types').Servicio[]>('/servicios'),
+  createServicio: (data: { nombre: string; duracion_min: number; precio: number }) =>
+    authFetch<import('./types').Servicio>('/servicios', { method: 'POST', body: JSON.stringify(data) }),
+  updateServicio: (id: string, data: { nombre?: string; duracion_min?: number; precio?: number; activo?: boolean }) =>
+    authFetch<import('./types').Servicio>(`/servicios/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+
+  // Configuración — Usuarios (solo dueno)
+  getUsuarios: () => authFetch<(import('./types').Usuario & { activo: boolean })[]>('/usuarios'),
+  createUsuario: (data: { nombre: string; email: string; password: string; rol: string; barbero_id?: string }) =>
+    authFetch('/usuarios', { method: 'POST', body: JSON.stringify(data) }),
+  updateUsuario: (id: string, data: { nombre?: string; email?: string; password?: string; rol?: string; activo?: boolean; barbero_id?: string | null }) =>
+    authFetch(`/usuarios/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
 }
