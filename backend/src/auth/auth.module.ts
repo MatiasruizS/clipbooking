@@ -13,7 +13,7 @@ import { Usuario } from '../usuarios/entities/usuario.entity';
     TypeOrmModule.forFeature([Usuario]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN ?? '7d' },
+      signOptions: { expiresIn: (process.env.JWT_EXPIRES_IN ?? '7d') as string },
     }),
   ],
   controllers: [AuthController],
